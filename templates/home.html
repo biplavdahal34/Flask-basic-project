@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {%  if title %}
+        <title> Biplav Blog- {{ title }}</title>
+    {% else %}
+        <title> Biplav Blog </title>
+    {% endif %}
+
+</head>
+<body>
+    {%  for post in posts%}
+    <h1>
+        {{ post.title }}
+    </h1>
+    <p>
+        By {{post.name}} on {{post.date}}
+    </p>
+    <p>
+        {{post.content}}
+    </p>
+    {%  endfor %}
+</body>
+
+</html>

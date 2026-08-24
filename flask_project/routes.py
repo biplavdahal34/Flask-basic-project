@@ -1,8 +1,8 @@
 from flask import render_template,url_for, flash, redirect
-from flask_project import app
+from flask_project import app,db,bcrypt
 from flask_project.models import User, Post
 from flask_project.forms import Registration, Login
-
+from flask_login import login_user, current_user
 dummy_post = [{
     "name" : "ricky",
     "age"  : "24",
@@ -29,19 +29,28 @@ def home():
 
 @app.route("/register",methods=['GET','POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = Registration()
     if form.validate_on_submit():
-        flash(f'Account Created For {form.username.data}!','success')
-        return redirect(url_for("home"))
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+        user = User(username = form.username.data, email = form.email.data, password = hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Your Account Has Been Created, Please Login!','success')
+        return redirect(url_for("login"))
     return render_template("register.html", title = "Register", form = form)
 
 @app.route("/login",methods=['GET','POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = Login()
     if form.validate_on_submit():
-        if form.email.data == "biplav123@gmail.com" and form.password.data == "password":
-            flash("Welcome", "success")
-            return redirect(url_for("home"))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            return redirect(url_for('home'))
         else:
             flash("Login Failed. Please Try Again", "danger")
     return render_template("login.html", title = "Login", form = form)

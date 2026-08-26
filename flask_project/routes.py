@@ -1,24 +1,10 @@
 import os
 import secrets
-from flask import render_template,url_for, flash, redirect, request
+from flask import render_template,url_for, flash, redirect, request, abort
 from flask_project import app,db,bcrypt
 from flask_project.models import User, Post
 from flask_project.forms import Registration, Login, UpdateAccount, New_post
 from flask_login import login_user, current_user, logout_user, login_required
-dummy_post = [{
-    "name" : "ricky",
-    "age"  : "24",
-    "title": "First Post",
-    "content": "hello, i am rick. nice to meet you all",
-    "date" : "May 20, 2026",
-},
-{
-    "name" : "morty",
-    "age"  : "16",
-    "title": "New post, Hello", 
-    "content": "hello, i am morty. nice to meet you all",
-    "date" : "june 17, 2026",
-},]
 
 @app.route("/about")
 def about():
@@ -27,7 +13,7 @@ def about():
 @app.route("/home")
 @app.route("/")
 def home():
-    return render_template("home.html", posts = dummy_post)
+    return render_template("home.html", posts = Post.query.all())
 
 @app.route("/register",methods=['GET','POST'])
 def register():
@@ -104,3 +90,35 @@ def new_post():
         flash(f'Your Words Have Been Posted','success')
         return redirect(url_for('home'))
     return(render_template("newpost.html", title="New Post",legend = "Post", form = form ))
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return(render_template("post.html",title = post.title,post=post  ))
+
+@app.route("/post/<int:post_id>/update", methods=["GET", "POST"])
+@login_required
+def modify_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = New_post(title = post.title,body=post.content)
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.body.data
+        db.session.commit()
+        flash(f'Your Post Has Been Updated!','success')
+        return redirect(url_for('post', post_id = post_id))
+    return(render_template("modify_post.html",title = post.title,legend = "Update",form=form, post=post))
+
+@app.route("/post/<int:post_id>/delete", methods=["POST"])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash(f'Your Post Has Been Deleted','danger')
+    return redirect(url_for('home'))
+    

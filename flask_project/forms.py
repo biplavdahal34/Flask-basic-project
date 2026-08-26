@@ -55,6 +55,6 @@ class UpdateAccount(FlaskForm):
 
 class New_post(FlaskForm):
     title = TextAreaField("Title", validators=[DataRequired(), Length(max=50)])
-    body = TextAreaField("Body", validators=[DataRequired(), Length(max=1000)])
-    submit = SubmitField("SIGN UP")
+    body = TextAreaField("Body", validators=[DataRequired(), Length(max=3000)])
+    submit = SubmitField("Post")
 

@@ -39,7 +39,7 @@ def register():
         user = User(username = form.username.data, email = form.email.data, password = hashed_password)
         db.session.add(user)
         db.session.commit()
-        flash(f'Your Account Has Been Created, Please Login!','success')
+        flash(f'Your Account Has Been Created, Please Login! (˶ˆᗜˆ˵)','success')
         return redirect(url_for("login"))
     return render_template("register.html", title = "Register", form = form)
 
@@ -55,7 +55,7 @@ def login():
             login_user(user, remember=form.remember.data)
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash("Login Failed. Please Try Again", "danger")
+            flash("Login Failed. Please Try Again! (╥﹏╥)", "danger")
     return render_template("login.html", title = "Login", form = form)
 
 @app.route("/logout")
@@ -84,7 +84,7 @@ def account():
             current_user.username = form.username.data
             current_user.email = form.email.data
             db.session.commit()
-            flash(f'Your Account Has Been Updated','success')
+            flash(f'Your Account Has Been Updated! ദ്ദി(๑>؂•̀๑)','success')
             return redirect(url_for("account"))
     elif request.method == "GET" :
         form.username.data = current_user.username
@@ -102,4 +102,5 @@ def new_post():
         db.session.add(user_post)
         db.session.commit()
         flash(f'Your Words Have Been Posted','success')
+        return redirect(url_for('home'))
     return(render_template("newpost.html", title="New Post",legend = "Post", form = form ))

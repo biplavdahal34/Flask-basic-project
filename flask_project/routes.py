@@ -3,7 +3,7 @@ import secrets
 from flask import render_template,url_for, flash, redirect, request
 from flask_project import app,db,bcrypt
 from flask_project.models import User, Post
-from flask_project.forms import Registration, Login, UpdateAccount
+from flask_project.forms import Registration, Login, UpdateAccount, New_post
 from flask_login import login_user, current_user, logout_user, login_required
 dummy_post = [{
     "name" : "ricky",
@@ -92,3 +92,14 @@ def account():
     image_file = url_for('static', filename= "profile_pictures/" + current_user.image)
     print(current_user.image)
     return render_template("account.html", title = "Account", image_file = image_file, form=form, legend ="Update")
+
+@app.route("/post/new", methods=["GET", "POST"])
+@login_required
+def new_post():
+    form = New_post()
+    if form.validate_on_submit():
+        user_post = Post(user_id = current_user.id, title = form.title.data, content = form.body.data)
+        db.session.add(user_post)
+        db.session.commit()
+        flash(f'Your Words Have Been Posted','success')
+    return(render_template("newpost.html", title="New Post",legend = "Post", form = form ))

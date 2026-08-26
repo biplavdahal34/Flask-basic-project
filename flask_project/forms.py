@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_project import app
 from flask_project.models import User
@@ -51,4 +51,10 @@ class UpdateAccount(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError("The Email Is Already Taken. Please Try Another One")
+            
+
+class New_post(FlaskForm):
+    title = TextAreaField("Title", validators=[DataRequired(), Length(max=50)])
+    body = TextAreaField("Body", validators=[DataRequired(), Length(max=1000)])
+    submit = SubmitField("SIGN UP")
 

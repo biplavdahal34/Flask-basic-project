@@ -13,7 +13,8 @@ def about():
 @app.route("/home")
 @app.route("/")
 def home():
-    return render_template("home.html", posts = Post.query.all())
+    page = request.args.get("page", 1, type=int)
+    return render_template("home.html", posts = Post.query.order_by(Post.date_posted.desc()).paginate(page =page, per_page=5))
 
 @app.route("/register",methods=['GET','POST'])
 def register():
@@ -62,6 +63,7 @@ def save_picture(form_picture):
 @login_required
 def account():
     form = UpdateAccount()
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
     if form.pfpimage.data:
         f_name = save_picture(form.pfpimage.data)
         current_user.image= f_name
@@ -77,7 +79,7 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename= "profile_pictures/" + current_user.image)
     print(current_user.image)
-    return render_template("account.html", title = "Account", image_file = image_file, form=form, legend ="Update")
+    return render_template("account.html", title = "Account", image_file = image_file, form=form, legend ="Update", posts = posts)
 
 @app.route("/post/new", methods=["GET", "POST"])
 @login_required
@@ -122,3 +124,12 @@ def delete_post(post_id):
     flash(f'Your Post Has Been Deleted','danger')
     return redirect(url_for('home'))
     
+@app.route("/user/<string:username>")
+def selected_account(username):
+    page = request.args.get("page", 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    image_file = url_for('static', filename= "profile_pictures/" + user.image)
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
+    if user.username == current_user.username:
+        return redirect(url_for('account'))
+    return render_template("selected_account.html", title = username , image_file = image_file, posts = posts, user=user)

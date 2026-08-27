@@ -80,7 +80,7 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename= "profile_pictures/" + current_user.image)
     print(current_user.image)
-    return render_template("account.html", title = "Account", image_file = image_file, form=form, legend ="Update", posts = posts)
+    return render_template("account.html", title = "Account", image_file = image_file, form=form, legend ="Update", posts = posts, user=current_user)
 
 @app.route("/post/new", methods=["GET", "POST"])
 @login_required
@@ -97,7 +97,7 @@ def new_post():
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    return(render_template("post.html",title = post.title,post=post  ))
+    return(render_template("post.html",title = post.title,post=post))
 
 @app.route("/post/<int:post_id>/update", methods=["GET", "POST"])
 @login_required

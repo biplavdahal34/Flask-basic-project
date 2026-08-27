@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
+{% if user is defined %}
+    <h2 class="mb-3">Posts By {{ user.username }} ({{posts.total}}):</h2>
+{% endif %}
 {%for post in posts.items%}
         <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{url_for('static', filename='profile_pictures/' + post.author.image)}}">
             <div class="media-body">
             <div class="article-metadata">
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d')}}</small>
             </div>
             <div>
-                
                 <a href="{{ url_for('post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
                     <h2 class="article-title">{{ post.title }}</h2>
                     <p class="article-content">{{ post.content }}</p>

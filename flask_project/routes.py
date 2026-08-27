@@ -63,7 +63,8 @@ def save_picture(form_picture):
 @login_required
 def account():
     form = UpdateAccount()
-    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
+    page = request.args.get("page", 1, type=int)
+    posts = Post.query.filter_by(author=current_user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
     if form.pfpimage.data:
         f_name = save_picture(form.pfpimage.data)
         current_user.image= f_name

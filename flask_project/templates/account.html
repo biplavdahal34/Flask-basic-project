@@ -57,30 +57,5 @@
         
 
     </div>
-    {%for post in posts.items%}
-        <article class="media content-section">
-            <div class="media-body">
-            <div class="article-metadata">
-                <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d')}}</small>
-            </div>
-            <div>
-                
-                <a href="{{ url_for('post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
-                    <h2 class="article-title">{{ post.title }}</h2>
-                    <p class="article-content">{{ post.content }}</p>
-                </a>
-            </div>
-        </article>
-    {% endfor %}
-    {%for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1,right_current=1)%}
-        {%if page_num %}
-            {%if page_num == posts.page %}
-                <a class = "btn btn-info mb-4" href="{{url_for('home', page = page_num)}}">{{page_num}}</a>
-            {%else%}
-                <a class = "btn btn-outline-info mb-4" href="{{url_for('home', page = page_num)}}">{{page_num}}</a>
-            {%endif%}
-        {%else%}
-            ...
-        {%endif%}
-    {%endfor%}
+    {% include "all_posts.html" %}
 {% endblock content %}

@@ -21,9 +21,9 @@
     {%for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1,right_current=1)%}
         {%if page_num %}
             {%if page_num == posts.page %}
-                <a class = "btn btn-info mb-4" href="{{url_for('home', page = page_num)}}">{{page_num}}</a>
+                <a class = "btn btn-info mb-4" href="{{url_for(request.endpoint, page=page_num, **request.view_args)}}">{{page_num}}</a>
             {%else%}
-                <a class = "btn btn-outline-info mb-4" href="{{url_for('home', page = page_num)}}">{{page_num}}</a>
+                <a class = "btn btn-outline-info mb-4" href="{{url_for(request.endpoint, page=page_num, **request.view_args)}}">{{page_num}}</a>
             {%endif%}
         {%else%}
             ...

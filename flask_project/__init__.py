@@ -22,4 +22,11 @@ mail = Mail(app)
 
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
-from flask_project import routes
+
+from flask_project.users.routes import users
+from flask_project.main.routes import main
+from flask_project.post.routes import posts
+
+app.register_blueprint(users)
+app.register_blueprint(main)
+app.register_blueprint(posts)

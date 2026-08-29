@@ -12,8 +12,8 @@
             </div>
             <div>
                 <a class="article-content-allpost"href="{{ url_for('posts.post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
-                    <div><h4 class="article-title-t">{{ post.title }}</h4></div>
-                    <div><p>{{ post.content }}</p></div>
+                    <div><h4>{{ post.title }}</h4></div>
+                    <div><p class="text-secondary">{{ post.content }}</p></div>
                 </a>
             </div>
         </article>

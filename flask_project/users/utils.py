@@ -17,7 +17,7 @@ def send_email(user):
     token = user.token_expiry()
     msg = Message('Password Reset Request',sender='ok.2346756@gmail.com', recipients=[user.email])
     msg.body = f'''To reset your password, please visit the following link:
-{url_for('reset_password', token = token, _external=True)}
+{url_for('users.reset_password', token = token, _external=True)}
 
 If your didnot make this request, please ignore it.
 '''

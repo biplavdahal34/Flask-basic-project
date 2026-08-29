@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
         s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'user_id':self.id}, salt='password-reset')
     @staticmethod
-    def verify_token(token, max_age=120):
+    def verify_token(token, max_age=580):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token, salt='password-reset', max_age=max_age)['user_id']

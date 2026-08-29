@@ -112,7 +112,7 @@ def reset_password(token):
             user.password = hashed_password
             db.session.commit()
             flash(f'Your Password Has Been Reset! (˶ˆᗜˆ˵)','success')
-            return redirect(url_for("useers.login"))
+            return redirect(url_for("users.login"))
     return render_template("reset_password.html", title = "Reset Password" , form=form, user=user)
 
 @users.route("/account/update_account",methods=["GET", "POST"])

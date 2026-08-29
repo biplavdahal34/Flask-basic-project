@@ -11,9 +11,9 @@
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d')}}</small>
             </div>
             <div>
-                <a href="{{ url_for('post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
-                    <h2 class="article-title">{{ post.title }}</h2>
-                    <p class="article-content">{{ post.content }}</p>
+                <a href="{{ url_for('posts.post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
+                    <div><h4 class="article-title-t">{{ post.title }}</h4></div>
+                    <div><p class="article-content">{{ post.content }}</p></div>
                 </a>
             </div>
         </article>

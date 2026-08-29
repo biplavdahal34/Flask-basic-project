@@ -3,7 +3,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_login import current_user
-from flaskblog.models import User
+from flask_project.models import User, current_app
 
 
 class Registration(FlaskForm):
@@ -14,13 +14,13 @@ class Registration(FlaskForm):
     submit = SubmitField("SIGN UP")
 
     def validate_username(self, username):
-        with app.app_context():
+        with current_app.app_context():
             user = User.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError("The Username Is Already Taken. Please Try Another One")
 
     def validate_email(self, email):
-        with app.app_context():
+        with current_app.app_context():
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError("The Email Is Already Taken. Please Try Another One")

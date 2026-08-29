@@ -1,11 +1,22 @@
 body{padding-top: 5rem;
 
  }
- {
+ .navbar-pfp {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  margin-right: 6px;
+ }
+ body {
     background: #fafafa;
     color: #333333;
-    margin-top: 5rem;
+    margin-top: 1rem;
+    padding-top: 5rem;
   }
+  .site-header .navbar-nav .nav-link.navbar-pfp-link {
+    display: flex;
+    align-items: center;
+ }
   
   h1, h2, h3, h4, h5, h6 {
     color: #444444;
@@ -26,6 +37,9 @@ body{padding-top: 5rem;
   .site-header .navbar-nav .nav-link.active {
     font-weight: 500;
   }
+  .navbar-nav {
+    align-items: center;
+ }
   
   .content-section {
     background: #ffffff;
@@ -42,6 +56,14 @@ body{padding-top: 5rem;
     min-width: 0;
     flex: 1;
   }
+  .article-title-t {
+    font-size: 1.3rem; /* adjust up/down from here */
+    color: #444444;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+    flex: 1;
+} 
   
   a.article-title:hover {
     color: #428bca;

@@ -20,7 +20,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f'Your Account Has Been Created, Please Login! (˶ˆᗜˆ˵)','success')
-        return redirect(url_for("login"))
+        return redirect(url_for("users.login"))
     return render_template("register.html", title = "Register", form = form)
 
 @users.route("/login",methods=['GET','POST'])
@@ -34,7 +34,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash("Login Successful!", "success")
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash("Login Failed. Please Try Again! (╥﹏╥)", "danger")
     return render_template("login.html", title = "Login", form = form)
@@ -42,7 +42,7 @@ def login():
 @users.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
 
 @users.route("/account",methods=["GET", "POST"])
@@ -51,21 +51,21 @@ def account():
     form = UpdateAccount()
     page = request.args.get("page", 1, type=int)
     posts = Post.query.filter_by(author=current_user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
-    if form.pfpimage.data:
-        f_name = save_picture(form.pfpimage.data)
-        current_user.image= f_name
     if form.validate_on_submit():
+        if form.pfpimage.data:
+            f_name = save_picture(form.pfpimage.data)
+            current_user.image= f_name
+            db.session.commit()
         if current_user.username != form.username.data or current_user.email != form.email.data:
             current_user.username = form.username.data
             current_user.email = form.email.data
             db.session.commit()
             flash(f'Your Account Has Been Updated! ദ്ദി(๑>؂•̀๑)','success')
-            return redirect(url_for("account"))
+            return redirect(url_for("users.account"))
     elif request.method == "GET" :
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static', filename= "profile_pictures/" + current_user.image)
-    print(current_user.image)
     return render_template("account.html", title = "Account", image_file = image_file, form=form, legend ="Update", posts = posts, user=current_user)
 
 
@@ -76,7 +76,7 @@ def selected_account(username):
     image_file = url_for('static', filename= "profile_pictures/" + user.image)
     posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
     if user.username == current_user.username:
-        return redirect(url_for('account'))
+        return redirect(url_for('users.account'))
     return render_template("selected_account.html", title = username , image_file = image_file, posts = posts, user=user)
 
 
@@ -84,27 +84,27 @@ def selected_account(username):
 @users.route("/reset_request", methods=['GET','POST'])
 def reset():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     form = Request_reset_form()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_email(user)
             flash('An Email Has Been Sent To Your Email Address!', 'info')
-            return redirect(url_for('login'))
+            return redirect(url_for('users.login'))
         else:
             flash('Email Does Not Exist', 'danger')
-            return redirect(url_for('reset'))
+            return redirect(url_for('users.reset'))
     return render_template("reset_request.html", title="Reset Form", form=form)
 
 @users.route("/reset_request/<string:token>",methods=['GET','POST'])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     user = User.verify_token(token)
     if user is None:
         flash('That Is An Invalid Or Expired Token', 'warning')
-        return redirect(url_for('reset'))
+        return redirect(url_for('users.reset'))
     form = Password_reset_form()
     if form.validate_on_submit():
         if form.validate_on_submit():
@@ -112,5 +112,5 @@ def reset_password(token):
             user.password = hashed_password
             db.session.commit()
             flash(f'Your Password Has Been Reset! (˶ˆᗜˆ˵)','success')
-            return redirect(url_for("login"))
+            return redirect(url_for("useers.login"))
     return render_template("reset_password.html", title = "Reset Password" , form=form, user=user)

@@ -3,7 +3,7 @@ from flask import (render_template, url_for, flash,
 from flask_login import current_user, login_required
 from flask_project import db
 from flask_project.models import Post
-from flask_project.post.forms import PostForm
+from flask_project.post.forms import New_post
 
 
 posts= Blueprint('posts', __name__)
@@ -17,7 +17,7 @@ def new_post():
         db.session.add(user_post)
         db.session.commit()
         flash(f'Your Words Have Been Posted','success')
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     return(render_template("newpost.html", title="New Post",legend = "Post", form = form ))
 
 @posts.route("/post/<int:post_id>")
@@ -37,7 +37,7 @@ def modify_post(post_id):
         post.content = form.body.data
         db.session.commit()
         flash(f'Your Post Has Been Updated!','success')
-        return redirect(url_for('post', post_id = post_id))
+        return redirect(url_for('posts.post', post_id = post_id))
     return(render_template("modify_post.html",title = post.title,legend = "Update",form=form, post=post))
 
 @posts.route("/post/<int:post_id>/delete", methods=["POST"])
@@ -49,4 +49,4 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash(f'Your Post Has Been Deleted','danger')
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))

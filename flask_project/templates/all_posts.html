@@ -4,16 +4,16 @@
     <h2 class="mb-3">Posts By {{ user.username }} ({{posts.total}}):</h2>
 {% endif %}
 {%for post in posts.items%}
-        <article class="media content-section">
+        <article class="media content-section-allpost">
             <img class="rounded-circle article-img" src="{{url_for('static', filename='profile_pictures/' + post.author.image)}}">
             <div class="media-body">
             <div class="article-metadata">
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d')}}</small>
             </div>
             <div>
-                <a href="{{ url_for('posts.post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
+                <a class="article-content-allpost"href="{{ url_for('posts.post', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
                     <div><h4 class="article-title-t">{{ post.title }}</h4></div>
-                    <div><p class="article-content">{{ post.content }}</p></div>
+                    <div><p>{{ post.content }}</p></div>
                 </a>
             </div>
         </article>

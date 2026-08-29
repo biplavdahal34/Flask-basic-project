@@ -114,3 +114,25 @@ def reset_password(token):
             flash(f'Your Password Has Been Reset! (˶ˆᗜˆ˵)','success')
             return redirect(url_for("useers.login"))
     return render_template("reset_password.html", title = "Reset Password" , form=form, user=user)
+
+@users.route("/account/update_account",methods=["GET", "POST"])
+@login_required
+def update():
+    form = UpdateAccount()
+    if form.validate_on_submit():
+        if form.pfpimage.data:
+            f_name = save_picture(form.pfpimage.data)
+            current_user.image= f_name
+            db.session.commit()
+        if current_user.username != form.username.data or current_user.email != form.email.data:
+            current_user.username = form.username.data
+            current_user.email = form.email.data
+            db.session.commit()
+            flash(f'Your Account Has Been Updated! ദ്ദി(๑>؂•̀๑)','success')
+        return redirect(url_for("users.account"))
+    elif request.method == "GET" :
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    image_file = url_for('static', filename= "profile_pictures/" + current_user.image)
+    return render_template("modify_account.html", title = "Modify Account", image_file = image_file, form=form, legend ="Update", user=current_user)
+

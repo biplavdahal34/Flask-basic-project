@@ -75,7 +75,7 @@ def selected_account(username):
     user = User.query.filter_by(username=username).first_or_404()
     image_file = url_for('static', filename= "profile_pictures/" + user.image)
     posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page =page, per_page=5)
-    if user.username == current_user.username:
+    if current_user.is_authenticated and user.username == current_user.username:
         return redirect(url_for('users.account'))
     return render_template("selected_account.html", title = username , image_file = image_file, posts = posts, user=user)
 

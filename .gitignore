@@ -7,4 +7,4 @@ instance/
 *.db
 .vscode/
 .env
-variabales.env
+variables.env
